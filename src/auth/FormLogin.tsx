@@ -10,41 +10,36 @@ const FormLogin: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { email, password, message, isLogged } = useAppSelector((state) => state.auth);
-  const [userProfile, setUserProfile] = useState<{ phoneNumber?: string } | null>(null);
+  const [userProfile, setUserProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  // Fetch user profile dari API
-  const fetchUserProfile = async () => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      setLoading(false);
-      return;
-    }
-
-    try {
-      const response = await api.get('/users/detail', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setUserProfile(response.data.data.user);
-    } catch (error) {
-      console.error('Error fetching user profile:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Fetch data user saat komponen pertama kali di-load
   useEffect(() => {
+    const fetchUserProfile = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const response = await api.get('/users/detail', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setUserProfile(response.data.data.user);
+      } catch (error) {
+        console.error('Error fetching user profile:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchUserProfile();
   }, []);
 
-  // Handle ketika login berhasil
   useEffect(() => {
     if (isLogged) {
-      fetchUserProfile(); // Ambil data user setelah login
-
       Swal.fire({
         title: 'Login Berhasil!',
         text: 'Selamat, Anda berhasil login.',
@@ -73,7 +68,6 @@ const FormLogin: React.FC = () => {
     }
   }, [isLogged, message, navigate, userProfile]);
 
-  // Handle submit login form
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     dispatch(login({ email, password }));
