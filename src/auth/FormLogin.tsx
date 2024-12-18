@@ -49,16 +49,20 @@ const FormLogin: React.FC = () => {
         icon: 'success',
         confirmButtonText: 'OK',
       }).then(() => {
-        if (!userProfile) return;
-
-        // Hanya tampilkan alert jika phoneNumber belum diisi
-        if (!userProfile.phoneNumber) {
+        if (!userProfile?.phoneNumber?.trim()) {
           Swal.fire({
             icon: 'warning',
-            title: 'Lengkapi Profile',
-            text: 'Silakan lengkapi profil Anda sebelum melanjutkan.',
-          }).then(() => {
-            navigate('/user/profile');
+            title: 'Profil Tidak Lengkap',
+            text: 'Nomor telepon Anda kosong, ingin melengkapi profil?',
+            showCancelButton: true,
+            confirmButtonText: 'Ya',
+            cancelButtonText: 'Nanti',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              navigate('/user/profile');
+            } else {
+              navigate('/');
+            }
           });
         } else {
           navigate('/');
