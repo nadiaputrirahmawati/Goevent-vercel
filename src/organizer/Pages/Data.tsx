@@ -16,7 +16,7 @@ export const Data = () => {
         try {
             const response = await api.get(`tickets/data/${id}`);
             const tickets = response.data.data.tickets;
-
+            console.log("Response update status:", response.data.data.tickets);
             if (!tickets || tickets.length === 0) {
                 setErrorMessage("Data tiket tidak tersedia");
             } else {
@@ -36,7 +36,7 @@ export const Data = () => {
     const updateStatus = async (ticketId: string) => {
         try {
             const response = await api.put(`tickets/status/${ticketId}`);
-            console.log("Response update status:", response.data);
+           
             fetchData();
         } catch (error) {
             alert("Gagal memperbarui status tiket");
@@ -69,7 +69,7 @@ export const Data = () => {
                     cell: (row: any) => (
                         row.status !== "USED" && (
                             <button
-                                className="bg-primary hover:bg-sky-800 text-white font-bold  px-6 py-2 rounded-full"
+                                className="bg-primary hover:bg-sky-800 text-white font-bold  px-3 py-2 rounded-full"
                                 onClick={() => updateStatus(row.action)}
                             >
                                 Update Status
