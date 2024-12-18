@@ -13,6 +13,7 @@ const FormLogin: React.FC = () => {
   const [userProfile, setUserProfile] = useState<{ phoneNumber?: string } | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Fetch user profile dari API
   const fetchUserProfile = async () => {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -43,6 +44,7 @@ const FormLogin: React.FC = () => {
   useEffect(() => {
     if (isLogged) {
       fetchUserProfile(); // Ambil data user setelah login
+
       Swal.fire({
         title: 'Login Berhasil!',
         text: 'Selamat, Anda berhasil login.',
@@ -52,17 +54,10 @@ const FormLogin: React.FC = () => {
         if (!userProfile?.phoneNumber?.trim()) {
           Swal.fire({
             icon: 'warning',
-            title: 'Profil Tidak Lengkap',
-            text: 'Nomor telepon Anda kosong, ingin melengkapi profil?',
-            showCancelButton: true,
-            confirmButtonText: 'Ya',
-            cancelButtonText: 'Nanti',
-          }).then((result) => {
-            if (result.isConfirmed) {
-              navigate('/user/profile');
-            } else {
-              navigate('/');
-            }
+            title: 'Lengkapi Profile',
+            text: 'Silakan lengkapi profil Anda sebelum melanjutkan.',
+          }).then(() => {
+            navigate('/user/profile');
           });
         } else {
           navigate('/');
